@@ -10,6 +10,10 @@ const usersRouter = require('./routes/users')
 
 const app = express()
 
+const tracer = require('dd-trace').init({
+  hostname: process.env.DD_AGENT_HOSTNAME
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
