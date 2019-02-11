@@ -16,11 +16,13 @@ services:
       - DATABASE_PASSWORD=mypassword
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DD_AGENT_HOST=datadog
     volumes:
       - ./:/app/
     depends_on:
       - postgres
       - redis
+      - datadog
 
   postgres:
     restart: always
@@ -36,6 +38,17 @@ services:
     image: redis:alpine
     ports:
       - 6379:6379
+
+
+  datadog:
+    image: datadog/agent:latest
+    environment:
+     - DD_API_KEY=${DD_API_KEY}
+     - DD_APM_ENABLED=true
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /proc/:/host/proc:ro
+     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
 
 volumes:
   ? postgres
